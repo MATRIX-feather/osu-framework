@@ -23,10 +23,12 @@ namespace osu.Framework.Localisation
                 LocalisedString text,
                 IBindable<IResourceStore<string>> storage,
                 IBindable<bool> preferUnicode,
-                IBindable<ICatalog> catalog)
+                IBindable<ICatalog> catalog,
+                bool useLegacyUnicode)
             {
                 this.text = text;
                 this.catalog.BindTo(catalog);
+                this.useLegacyUnicode = useLegacyUnicode;
 
                 this.storage.BindTo(storage);
                 this.preferUnicode.BindTo(preferUnicode);
@@ -42,7 +44,7 @@ namespace osu.Framework.Localisation
 
                 //todo: 使用`useLegacyUnicode`来判断是否要使用旧的unicode方案
                 //bug: 如果某一个歌名和翻译的源文本一样会一带翻译...
-                if (text.Text.Original != text.Text.Fallback)
+                if (useLegacyUnicode)
                 {
                     newText = preferUnicode.Value ? text.Text.Original : text.Text.Fallback;
 
@@ -87,12 +89,7 @@ namespace osu.Framework.Localisation
             bool ILocalisedBindableString.UseLegacyUnicode
             {
                 get => useLegacyUnicode;
-                set
-                {
-                    useLegacyUnicode = value;
-
-                    updateValue();
-                }
+                set => useLegacyUnicode = value;
             }
         }
     }

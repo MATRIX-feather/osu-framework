@@ -40,12 +40,13 @@ namespace osu.Framework.Localisation
         /// </summary>
         /// <returns>The <see cref="ILocalisedBindableString"/>.</returns>
         [NotNull]
-        public ILocalisedBindableString GetLocalisedString(LocalisedString original)
+        public ILocalisedBindableString GetLocalisedString(LocalisedString original, bool useLegacyUnicode = false)
             => new LocalisedBindableString(
                 original,
                 currentStorage,
                 preferUnicode,
-                catalog);
+                catalog,
+                useLegacyUnicode);
 
         private void updateLocale(ValueChangedEvent<string> args)
         {

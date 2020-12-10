@@ -53,7 +53,7 @@ namespace osu.Framework.Graphics.Sprites
         [BackgroundDependencyLoader]
         private void load(ShaderManager shaders)
         {
-            localisedText = localisation.GetLocalisedString(text);
+            localisedText = localisation.GetLocalisedString(text, UseLegacyUnicode);
             localisedText.BindValueChanged(str =>
             {
                 if (string.IsNullOrEmpty(str.NewValue))
@@ -100,22 +100,7 @@ namespace osu.Framework.Graphics.Sprites
             }
         }
 
-        private bool useLegacyUnicode;
-
-        public bool UseLegacyUnicode
-        {
-            get => useLegacyUnicode;
-            set
-            {
-                if (useLegacyUnicode == value) return;
-
-                useLegacyUnicode = value;
-
-                if (localisedText != null)
-                    localisedText.UseLegacyUnicode = value;
-            }
-        }
-
+        public bool UseLegacyUnicode;
         private readonly BindableWithCurrent<string> current = new BindableWithCurrent<string>();
 
         public Bindable<string> Current
