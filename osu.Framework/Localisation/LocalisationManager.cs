@@ -3,10 +3,13 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using osu.Framework.Configuration;
 using osu.Framework.IO.Stores;
 using JetBrains.Annotations;
 using osu.Framework.Bindables;
+using M.Resources;
+using NGettext;
 
 namespace osu.Framework.Localisation
 {
@@ -17,13 +20,15 @@ namespace osu.Framework.Localisation
         private readonly Bindable<bool> preferUnicode;
         private readonly Bindable<string> configLocale;
         private readonly Bindable<IResourceStore<string>> currentStorage = new Bindable<IResourceStore<string>>();
+        private Stream moStream;
+        private readonly Bindable<ICatalog> catalog = new Bindable<ICatalog>();
 
         public LocalisationManager(FrameworkConfigManager config)
         {
             preferUnicode = config.GetBindable<bool>(FrameworkSetting.ShowUnicode);
 
             configLocale = config.GetBindable<string>(FrameworkSetting.Locale);
-            configLocale.BindValueChanged(updateLocale);
+            configLocale.BindValueChanged(updateLocale, true);
         }
 
         public void AddLanguage(string language, IResourceStore<string> storage)
@@ -37,10 +42,18 @@ namespace osu.Framework.Localisation
         /// </summary>
         /// <returns>The <see cref="ILocalisedBindableString"/>.</returns>
         [NotNull]
-        public ILocalisedBindableString GetLocalisedString(LocalisedString original) => new LocalisedBindableString(original, currentStorage, preferUnicode);
+        public ILocalisedBindableString GetLocalisedString(LocalisedString original)
+            => new LocalisedBindableString(
+                original,
+                currentStorage,
+                preferUnicode,
+                catalog);
 
         private void updateLocale(ValueChangedEvent<string> args)
         {
+            moStream = getMoStream(args.NewValue) ?? getMoStream("zh-Hans");
+            catalog.Value = new Catalog(moStream);
+
             if (locales.Count == 0)
                 return;
 
@@ -64,6 +77,14 @@ namespace osu.Framework.Localisation
                 configLocale.Value = validLocale.Name;
             else
                 currentStorage.Value = validLocale.Storage;
+        }
+
+        [CanBeNull]
+        private Stream getMoStream(string localeCode)
+        {
+            localeCode = localeCode.Replace("-", "_");
+            string path = $"M.Resources.Locales.{localeCode}.M.mo";
+            return MResources.ResourceAssembly.GetManifestResourceStream(path);
         }
 
         private class LocaleMapping

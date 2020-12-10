@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using NGettext;
 using osu.Framework.Bindables;
 using osu.Framework.IO.Stores;
 
@@ -15,24 +16,34 @@ namespace osu.Framework.Localisation
             private readonly IBindable<bool> preferUnicode = new Bindable<bool>();
 
             private LocalisedString text;
+            private readonly IBindable<ICatalog> catalog = new Bindable<ICatalog>();
 
-            public LocalisedBindableString(LocalisedString text, IBindable<IResourceStore<string>> storage, IBindable<bool> preferUnicode)
+            public LocalisedBindableString(
+                LocalisedString text,
+                IBindable<IResourceStore<string>> storage,
+                IBindable<bool> preferUnicode,
+                IBindable<ICatalog> catalog)
             {
                 this.text = text;
+                this.catalog.BindTo(catalog);
 
                 this.storage.BindTo(storage);
                 this.preferUnicode.BindTo(preferUnicode);
 
-                this.storage.BindValueChanged(_ => updateValue());
-                this.preferUnicode.BindValueChanged(_ => updateValue(), true);
+                this.preferUnicode.BindValueChanged(_ => updateValue());
+                this.catalog.BindValueChanged(_ => updateValue(), true);
             }
 
             private void updateValue()
             {
-                string newText = preferUnicode.Value ? text.Text.Original : text.Text.Fallback;
+                string newText = text.Text.Msgid;
 
-                if (text.ShouldLocalise && storage.Value != null)
-                    newText = storage.Value.Get(newText);
+                if (!string.IsNullOrEmpty(text.Text.Msgid) && catalog.Value != null)
+                {
+                    newText = text.ShouldLocalise
+                        ? catalog.Value.GetString(newText)
+                        : text.Text.Original;
+                }
 
                 if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
                 {

@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemplateGame.iOS", "osu.Fra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlappyDon.iOS", "osu.Framework.Templates\templates\template-flappy\FlappyDon.iOS\FlappyDon.iOS.csproj", "{48783186-230D-4048-A97A-E4F1DF43BF5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "M.Resources", "M.Resources\M.Resources.csproj", "{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,18 @@ Global
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhone.ActiveCfg = Release|iPhone
 		{7AA1DB5D-78DB-4693-AE50-D6078F5A0CAB}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|iPhone.Build.0 = Release|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{FF1897D8-7E97-48FC-96E6-0472D88BEFCB}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
