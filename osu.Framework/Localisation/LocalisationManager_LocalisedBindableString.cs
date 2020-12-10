@@ -38,7 +38,9 @@ namespace osu.Framework.Localisation
             {
                 string newText = text.Text.Msgid;
 
-                if (!string.IsNullOrEmpty(text.Text.Msgid) && catalog.Value != null)
+                if (!string.IsNullOrEmpty(text.Text.Msgid)
+                    && catalog.Value != null
+                    && text.ShouldLocalise)
                 {
                     newText = text.ShouldLocalise
                         ? catalog.Value.GetString(newText)

@@ -56,9 +56,9 @@ namespace osu.Framework.Localisation
         private LocalisedString((string original, string legacyFallback, string Msgid) text, bool shouldLocalise, params object[] args)
         {
             if (string.IsNullOrEmpty(text.original))
-                text.original = text.legacyFallback ?? string.Empty;
+                text.original = text.Msgid ?? string.Empty;
 
-            if (string.IsNullOrEmpty(text.legacyFallback))
+            if (!string.IsNullOrEmpty(text.legacyFallback))
                 text.legacyFallback = text.original;
 
             if (string.IsNullOrEmpty(text.Msgid))
