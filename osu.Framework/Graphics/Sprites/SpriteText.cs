@@ -100,6 +100,22 @@ namespace osu.Framework.Graphics.Sprites
             }
         }
 
+        private bool useLegacyUnicode;
+
+        public bool UseLegacyUnicode
+        {
+            get => useLegacyUnicode;
+            set
+            {
+                if (useLegacyUnicode == value) return;
+
+                useLegacyUnicode = value;
+
+                if (localisedText != null)
+                    localisedText.UseLegacyUnicode = value;
+            }
+        }
+
         private readonly BindableWithCurrent<string> current = new BindableWithCurrent<string>();
 
         public Bindable<string> Current

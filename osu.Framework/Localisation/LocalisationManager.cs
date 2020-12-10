@@ -8,7 +8,6 @@ using osu.Framework.Configuration;
 using osu.Framework.IO.Stores;
 using JetBrains.Annotations;
 using osu.Framework.Bindables;
-using M.Resources;
 using NGettext;
 
 namespace osu.Framework.Localisation
@@ -20,7 +19,6 @@ namespace osu.Framework.Localisation
         private readonly Bindable<bool> preferUnicode;
         private readonly Bindable<string> configLocale;
         private readonly Bindable<IResourceStore<string>> currentStorage = new Bindable<IResourceStore<string>>();
-        private Stream moStream;
         private readonly Bindable<ICatalog> catalog = new Bindable<ICatalog>();
 
         public LocalisationManager(FrameworkConfigManager config)
@@ -51,9 +49,6 @@ namespace osu.Framework.Localisation
 
         private void updateLocale(ValueChangedEvent<string> args)
         {
-            moStream = getMoStream(args.NewValue) ?? getMoStream("zh-Hans");
-            catalog.Value = new Catalog(moStream);
-
             if (locales.Count == 0)
                 return;
 
@@ -79,12 +74,9 @@ namespace osu.Framework.Localisation
                 currentStorage.Value = validLocale.Storage;
         }
 
-        [CanBeNull]
-        private Stream getMoStream(string localeCode)
+        public void SetCatalog(Stream moStream)
         {
-            localeCode = localeCode.Replace("-", "_");
-            string path = $"M.Resources.Locales.{localeCode}.M.mo";
-            return MResources.ResourceAssembly.GetManifestResourceStream(path);
+            catalog.Value = new Catalog(moStream);
         }
 
         private class LocaleMapping
