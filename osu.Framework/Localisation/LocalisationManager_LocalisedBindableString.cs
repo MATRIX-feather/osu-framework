@@ -42,7 +42,7 @@ namespace osu.Framework.Localisation
 
                 //todo: 使用`useLegacyUnicode`来判断是否要使用旧的unicode方案
                 //bug: 如果某一个歌名和翻译的源文本一样会一带翻译...
-                if (text.Text.Original == text.Text.Fallback)
+                if (text.Text.Original != text.Text.Fallback)
                 {
                     newText = preferUnicode.Value ? text.Text.Original : text.Text.Fallback;
 
