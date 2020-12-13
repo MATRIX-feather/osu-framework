@@ -19,7 +19,7 @@ namespace osu.Framework.Localisation
         private readonly Bindable<bool> preferUnicode;
         private readonly Bindable<string> configLocale;
         private readonly Bindable<IResourceStore<string>> currentStorage = new Bindable<IResourceStore<string>>();
-        private readonly Bindable<ICatalog> catalog = new Bindable<ICatalog>();
+        public readonly Bindable<ICatalog> Catalog = new Bindable<ICatalog>();
 
         public LocalisationManager(FrameworkConfigManager config)
         {
@@ -45,7 +45,7 @@ namespace osu.Framework.Localisation
                 original,
                 currentStorage,
                 preferUnicode,
-                catalog,
+                Catalog,
                 useLegacyUnicode);
 
         private void updateLocale(ValueChangedEvent<string> args)
@@ -77,7 +77,7 @@ namespace osu.Framework.Localisation
 
         public void SetCatalog(Stream moStream)
         {
-            catalog.Value = new Catalog(moStream);
+            Catalog.Value = new Catalog(moStream);
         }
 
         private class LocaleMapping

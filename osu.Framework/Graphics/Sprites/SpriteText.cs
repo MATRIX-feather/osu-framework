@@ -88,12 +88,12 @@ namespace osu.Framework.Graphics.Sprites
             get => text;
             set
             {
-                if (text != value)
-                {
-                    text = value;
+                if (text == value)
+                    return;
 
-                    current.Value = text;
-                }
+                text = value;
+
+                current.Value = text;
 
                 if (localisedText != null)
                     localisedText.Text = value;
