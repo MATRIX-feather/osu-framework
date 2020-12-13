@@ -13,21 +13,21 @@ namespace osu.Framework.Localisation
         private class LocalisedBindableString : Bindable<string>, ILocalisedBindableString
         {
             private readonly IBindable<IResourceStore<string>> storage = new Bindable<IResourceStore<string>>();
+            private readonly IBindableList<ICatalog> catalogs = new BindableList<ICatalog>();
             private readonly IBindable<bool> preferUnicode = new Bindable<bool>();
 
             private LocalisedString text;
             private bool useLegacyUnicode;
-            private readonly IBindable<ICatalog> catalog = new Bindable<ICatalog>();
 
             public LocalisedBindableString(
                 LocalisedString text,
                 IBindable<IResourceStore<string>> storage,
                 IBindable<bool> preferUnicode,
-                IBindable<ICatalog> catalog,
+                IBindableList<ICatalog> catalogs,
                 bool useLegacyUnicode)
             {
                 this.text = text;
-                this.catalog.BindTo(catalog);
+                this.catalogs.BindTo(catalogs);
                 this.useLegacyUnicode = useLegacyUnicode;
 
                 this.storage.BindTo(storage);
@@ -35,38 +35,49 @@ namespace osu.Framework.Localisation
 
                 this.storage.BindValueChanged(_ => updateValue(), true);
                 this.preferUnicode.BindValueChanged(_ => updateValue());
-                this.catalog.BindValueChanged(_ => updateValue());
+                this.catalogs.BindCollectionChanged((_, __) => updateValue());
             }
 
             private void updateValue()
             {
-                string newText;
+                string newText = "";
 
-                //todo: 使用`useLegacyUnicode`来判断是否要使用旧的unicode方案
-                //bug: 如果某一个歌名和翻译的源文本一样会一带翻译...
                 if (useLegacyUnicode)
                 {
                     newText = preferUnicode.Value ? text.Text.Original : text.Text.Fallback;
 
                     if (text.ShouldLocalise && storage.Value != null)
                         newText = storage.Value.Get(newText);
+
+                    if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
+                    {
+                        try
+                        {
+                            newText = string.Format(newText, text.Args);
+                        }
+                        catch (FormatException)
+                        {
+                            // Prevent crashes if the formatting fails. The string will be in a non-formatted state.
+                        }
+                    }
                 }
                 else
                 {
-                    newText = catalog.Value != null
-                        ? catalog.Value.GetString(text.Text.Original)
-                        : text.Text.Original;
-                }
-
-                if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
-                {
-                    try
+                    if (text.Args?.Length > 0)
                     {
-                        newText = string.Format(newText, text.Args);
+                        foreach (var catalog in catalogs)
+                        {
+                            newText = catalog.GetString(text.Text.Original, text.Args);
+                            if (!string.IsNullOrEmpty(newText)) break;
+                        }
                     }
-                    catch (FormatException)
+                    else
                     {
-                        // Prevent crashes if the formatting fails. The string will be in a non-formatted state.
+                        foreach (var catalog in catalogs)
+                        {
+                            newText = catalog.GetString(text.Text.Original);
+                            if (!string.IsNullOrEmpty(newText)) break;
+                        }
                     }
                 }
 
