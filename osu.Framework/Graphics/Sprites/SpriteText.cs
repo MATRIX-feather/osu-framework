@@ -14,6 +14,7 @@ using osu.Framework.Graphics.UserInterface;
 using osu.Framework.IO.Stores;
 using osu.Framework.Layout;
 using osu.Framework.Localisation;
+using osu.Framework.Logging;
 using osu.Framework.Utils;
 using osu.Framework.Text;
 using osuTK;
@@ -80,6 +81,8 @@ namespace osu.Framework.Graphics.Sprites
 
         private LocalisedString text = string.Empty;
 
+        private bool hasArg;
+
         /// <summary>
         /// Gets or sets the text to be displayed.
         /// </summary>
@@ -88,16 +91,24 @@ namespace osu.Framework.Graphics.Sprites
             get => text;
             set
             {
-                if (localisedText != null)
-                    localisedText.Text = value;
+                hasArg = value.Args?.Length > 0;
 
-                //bug: LocalisedString转string会丢失Args, 导致一些参数没有被正确设置
-                if (text == value)
+                if (hasArg && value.Args?.Length == 0)
+                {
+                    Logger.Error(new InvalidOperationException(), "缺少文本参数");
+                    return;
+                }
+
+                if (text.Equals(value))
                     return;
 
                 text = value;
 
-                current.Value = text;
+                if (!hasArg)
+                    current.Value = text;
+
+                if (localisedText != null)
+                    localisedText.Text = value;
             }
         }
 
