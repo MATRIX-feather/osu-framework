@@ -88,15 +88,16 @@ namespace osu.Framework.Graphics.Sprites
             get => text;
             set
             {
+                if (localisedText != null)
+                    localisedText.Text = value;
+
+                //bug: LocalisedString转string会丢失Args, 导致一些参数没有被正确设置
                 if (text == value)
                     return;
 
                 text = value;
 
                 current.Value = text;
-
-                if (localisedText != null)
-                    localisedText.Text = value;
             }
         }
 
