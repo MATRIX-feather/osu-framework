@@ -21,6 +21,7 @@ namespace osu.Framework.Localisation
         private readonly Bindable<string> configLocale;
         private readonly Bindable<IResourceStore<string>> currentStorage = new Bindable<IResourceStore<string>>();
         private ICatalog defaultCatalog;
+        public readonly Bindable<ICatalog> Catalog = new Bindable<ICatalog>();
 
         public LocalisationManager(FrameworkConfigManager config)
         {

@@ -40,7 +40,7 @@ namespace osu.Framework.Localisation
 
             private void updateValue()
             {
-                string newText = "";
+                string newText;
 
                 if (useLegacyUnicode)
                 {
@@ -48,36 +48,27 @@ namespace osu.Framework.Localisation
 
                     if (text.ShouldLocalise && storage.Value != null)
                         newText = storage.Value.Get(newText);
-
-                    if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
-                    {
-                        try
-                        {
-                            newText = string.Format(newText, text.Args);
-                        }
-                        catch (FormatException)
-                        {
-                            // Prevent crashes if the formatting fails. The string will be in a non-formatted state.
-                        }
-                    }
                 }
                 else
                 {
-                    if (text.Args?.Length > 0)
+                    newText = "";
+
+                    foreach (var catalog in catalogs)
                     {
-                        foreach (var catalog in catalogs)
-                        {
-                            newText = catalog.GetString(text.Text.Original, text.Args);
-                            if (!string.IsNullOrEmpty(newText)) break;
-                        }
+                        newText = catalog.GetString(text.Text.Original);
+                        if (!string.IsNullOrEmpty(newText)) break;
                     }
-                    else
+                }
+
+                if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
+                {
+                    try
                     {
-                        foreach (var catalog in catalogs)
-                        {
-                            newText = catalog.GetString(text.Text.Original);
-                            if (!string.IsNullOrEmpty(newText)) break;
-                        }
+                        newText = string.Format(newText, text.Args);
+                    }
+                    catch (FormatException)
+                    {
+                        // Prevent crashes if the formatting fails. The string will be in a non-formatted state.
                     }
                 }
 
