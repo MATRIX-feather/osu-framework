@@ -244,19 +244,19 @@ namespace osu.Framework.Platform
         {
             var exception = (Exception)args.ExceptionObject;
 
-            logException(exception, "unhandled");
+            logException(exception, "未处理的");
             abortExecutionFromException(sender, exception);
         }
 
         private void unobservedExceptionHandler(object sender, UnobservedTaskExceptionEventArgs args)
         {
             // unobserved exceptions are logged but left unhandled (most of the time they are not intended to be critical).
-            logException(args.Exception, "unobserved");
+            logException(args.Exception, "未观察的");
         }
 
         private void logException(Exception exception, string type)
         {
-            Logger.Error(exception, $"An {type} error has occurred.", recursive: true);
+            Logger.Error(exception, $"发生了一个{type}错误。", recursive: true);
         }
 
         /// <summary>
