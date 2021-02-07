@@ -171,6 +171,25 @@ namespace osu.Framework.Platform
             }
         }
 
+        /// <summary>
+        /// Returns or sets the window opacity.
+        /// </summary>
+        public float Opacity
+        {
+            get
+            {
+                SDL.SDL_GetWindowOpacity(SDLWindowHandle, out float o);
+                return o;
+            }
+            set
+            {
+                ScheduleCommand(() =>
+                {
+                    SDL.SDL_SetWindowOpacity(SDLWindowHandle, value);
+                });
+            }
+        }
+
         private bool cursorVisible = true;
 
         /// <summary>
@@ -307,6 +326,9 @@ namespace osu.Framework.Platform
 
                     case SDL.SDL_SYSWM_TYPE.SDL_SYSWM_ANDROID:
                         return wmInfo.info.android.window;
+
+                    case SDL.SDL_SYSWM_TYPE.SDL_SYSWM_UNKNOWN:
+                        return SDLWindowHandle;
 
                     default:
                         return IntPtr.Zero;
@@ -461,7 +483,7 @@ namespace osu.Framework.Platform
             {
                 Size = newSize;
 
-                ScheduleEvent(() => OnResized());
+                ScheduleEvent(OnResized);
             }
         }
 
