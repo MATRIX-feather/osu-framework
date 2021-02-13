@@ -335,7 +335,7 @@ namespace osu.Framework.Graphics.Containers
             get
             {
                 if (InternalChildren.Count != 1)
-                    throw new InvalidOperationException($"{nameof(InternalChild)} is only available when there's only 1 in {nameof(InternalChildren)}!");
+                    throw new InvalidOperationException($"Cannot call {nameof(InternalChild)} unless there's exactly one {nameof(Drawable)} in {nameof(InternalChildren)} (currently {InternalChildren.Count})!");
 
                 return InternalChildren[0];
             }
@@ -1302,7 +1302,7 @@ namespace osu.Framework.Graphics.Containers
         /// </summary>
         /// <param name="child">The drawable to be evaluated.</param>
         /// <returns>Whether or not the specified drawable should be considered when building input queues.</returns>
-        protected virtual bool ShouldBeConsideredForInput(Drawable child) => true;
+        protected virtual bool ShouldBeConsideredForInput(Drawable child) => child.LoadState == LoadState.Loaded;
 
         internal override bool BuildNonPositionalInputQueue(List<Drawable> queue, bool allowBlocking = true)
         {
