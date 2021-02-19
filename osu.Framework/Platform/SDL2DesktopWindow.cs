@@ -840,15 +840,27 @@ namespace osu.Framework.Platform
             if (ptr == IntPtr.Zero)
                 return;
 
-            string text = Marshal.PtrToStringUTF8(ptr) ?? "";
+            string text = Marshal.PtrToStringAuto(ptr) ?? "";
 
             foreach (char c in text)
                 ScheduleEvent(() => OnKeyTyped(c));
+
+            OnTextInput?.Invoke();
         }
 
-        private void handleTextEditingEvent(SDL.SDL_TextEditingEvent evtEdit)
+        private unsafe void handleTextEditingEvent(SDL.SDL_TextEditingEvent evtEdit)
         {
+            var ptr = new IntPtr(evtEdit.text);
+            if (ptr == IntPtr.Zero)
+                return;
+
+            string text = Marshal.PtrToStringAuto(ptr) ?? "";
+
+            OnTextEdit?.Invoke(text);
         }
+
+        public Action<string> OnTextEdit;
+        public Action OnTextInput;
 
         private void handleKeyboardEvent(SDL.SDL_KeyboardEvent evtKey)
         {
