@@ -840,7 +840,7 @@ namespace osu.Framework.Platform
             if (ptr == IntPtr.Zero)
                 return;
 
-            string text = Marshal.PtrToStringAuto(ptr) ?? "";
+            string text = Marshal.PtrToStringUTF8(ptr) ?? "";
 
             foreach (char c in text)
                 ScheduleEvent(() => OnKeyTyped(c));
@@ -854,7 +854,7 @@ namespace osu.Framework.Platform
             if (ptr == IntPtr.Zero)
                 return;
 
-            string text = Marshal.PtrToStringAuto(ptr) ?? "";
+            string text = Marshal.PtrToStringUTF8(ptr) ?? "";
 
             OnTextEdit?.Invoke(text);
         }
