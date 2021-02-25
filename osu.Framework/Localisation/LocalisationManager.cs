@@ -3,35 +3,29 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-using osu.Framework.Configuration;
-using osu.Framework.IO.Stores;
 using JetBrains.Annotations;
 using osu.Framework.Bindables;
-using NGettext;
+using osu.Framework.Configuration;
 
 namespace osu.Framework.Localisation
 {
     public partial class LocalisationManager
     {
         private readonly List<LocaleMapping> locales = new List<LocaleMapping>();
-        private readonly BindableList<ICatalog> catalogs = new BindableList<ICatalog>();
 
         private readonly Bindable<bool> preferUnicode;
         private readonly Bindable<string> configLocale;
-        private readonly Bindable<IResourceStore<string>> currentStorage = new Bindable<IResourceStore<string>>();
-        private ICatalog defaultCatalog;
-        public readonly Bindable<ICatalog> Catalog = new Bindable<ICatalog>();
+        private readonly Bindable<ILocalisationStore> currentStorage = new Bindable<ILocalisationStore>();
 
         public LocalisationManager(FrameworkConfigManager config)
         {
             preferUnicode = config.GetBindable<bool>(FrameworkSetting.ShowUnicode);
 
             configLocale = config.GetBindable<string>(FrameworkSetting.Locale);
-            configLocale.BindValueChanged(updateLocale, true);
+            configLocale.BindValueChanged(updateLocale);
         }
 
-        public void AddLanguage(string language, IResourceStore<string> storage)
+        public void AddLanguage(string language, ILocalisationStore storage)
         {
             locales.Add(new LocaleMapping { Name = language, Storage = storage });
             configLocale.TriggerChange();
@@ -42,13 +36,7 @@ namespace osu.Framework.Localisation
         /// </summary>
         /// <returns>The <see cref="ILocalisedBindableString"/>.</returns>
         [NotNull]
-        public ILocalisedBindableString GetLocalisedString(LocalisedString original, bool useLegacyUnicode = false)
-            => new LocalisedBindableString(
-                original,
-                currentStorage,
-                preferUnicode,
-                catalogs,
-                useLegacyUnicode);
+        public ILocalisedBindableString GetLocalisedString(LocalisableString original) => new LocalisedBindableString(original, currentStorage, preferUnicode);
 
         private void updateLocale(ValueChangedEvent<string> args)
         {
@@ -77,28 +65,10 @@ namespace osu.Framework.Localisation
                 currentStorage.Value = validLocale.Storage;
         }
 
-        public void AddCatalog(ICatalog catalog)
-        {
-            if (catalogs.Count == 0)
-                defaultCatalog = catalog;
-
-            catalogs.Add(catalog);
-        }
-
-        public void RemoveCatalog(ICatalog catalog)
-        {
-            catalogs.Remove(catalog);
-        }
-
-        public ICatalog CreateCatalog(Stream moStream)
-        {
-            return new Catalog(moStream);
-        }
-
         private class LocaleMapping
         {
             public string Name;
-            public IResourceStore<string> Storage;
+            public ILocalisationStore Storage;
         }
     }
 }

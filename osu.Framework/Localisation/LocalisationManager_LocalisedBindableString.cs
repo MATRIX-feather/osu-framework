@@ -1,10 +1,7 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
-using NGettext;
 using osu.Framework.Bindables;
-using osu.Framework.IO.Stores;
 
 namespace osu.Framework.Localisation
 {
@@ -12,86 +9,55 @@ namespace osu.Framework.Localisation
     {
         private class LocalisedBindableString : Bindable<string>, ILocalisedBindableString
         {
-            private readonly IBindable<IResourceStore<string>> storage = new Bindable<IResourceStore<string>>();
-            private readonly IBindableList<ICatalog> catalogs = new BindableList<ICatalog>();
+            private readonly IBindable<ILocalisationStore> storage = new Bindable<ILocalisationStore>();
             private readonly IBindable<bool> preferUnicode = new Bindable<bool>();
 
-            private LocalisedString text;
-            private bool useLegacyUnicode;
+            private LocalisableString text;
 
-            public LocalisedBindableString(
-                LocalisedString text,
-                IBindable<IResourceStore<string>> storage,
-                IBindable<bool> preferUnicode,
-                IBindableList<ICatalog> catalogs,
-                bool useLegacyUnicode)
+            public LocalisedBindableString(LocalisableString text, IBindable<ILocalisationStore> storage, IBindable<bool> preferUnicode)
             {
                 this.text = text;
-                this.catalogs.BindTo(catalogs);
-                this.useLegacyUnicode = useLegacyUnicode;
 
                 this.storage.BindTo(storage);
                 this.preferUnicode.BindTo(preferUnicode);
 
-                this.storage.BindValueChanged(_ => updateValue(), true);
-                this.preferUnicode.BindValueChanged(_ => updateValue());
-                this.catalogs.BindCollectionChanged((_, __) => updateValue());
+                this.storage.BindValueChanged(_ => updateValue());
+                this.preferUnicode.BindValueChanged(_ => updateValue(), true);
             }
 
             private void updateValue()
             {
-                string newText;
-
-                if (useLegacyUnicode)
+                switch (text.Data)
                 {
-                    newText = preferUnicode.Value ? text.Text.Original : text.Text.Fallback;
+                    case string plain:
+                        Value = plain;
+                        break;
 
-                    if (text.ShouldLocalise && storage.Value != null)
-                        newText = storage.Value.Get(newText);
+                    case RomanisableString romanisable:
+                        Value = romanisable.GetPreferred(preferUnicode.Value);
+                        break;
+
+                    case TranslatableString translatable:
+                        Value = translatable.Format(storage.Value);
+                        break;
+
+                    default:
+                        Value = string.Empty;
+                        break;
                 }
-                else
-                {
-                    newText = "";
-
-                    foreach (var catalog in catalogs)
-                    {
-                        newText = catalog.GetString(text.Text.Original);
-                        if (!string.IsNullOrEmpty(newText)) break;
-                    }
-                }
-
-                if (text.Args?.Length > 0 && !string.IsNullOrEmpty(newText))
-                {
-                    try
-                    {
-                        newText = string.Format(newText, text.Args);
-                    }
-                    catch (FormatException)
-                    {
-                        // Prevent crashes if the formatting fails. The string will be in a non-formatted state.
-                    }
-                }
-
-                Value = newText;
             }
 
-            LocalisedString ILocalisedBindableString.Text
+            LocalisableString ILocalisedBindableString.Text
             {
                 set
                 {
-                    if (text.Equals(value))
+                    if (text == value)
                         return;
 
                     text = value;
 
                     updateValue();
                 }
-            }
-
-            bool ILocalisedBindableString.UseLegacyUnicode
-            {
-                get => useLegacyUnicode;
-                set => useLegacyUnicode = value;
             }
         }
     }

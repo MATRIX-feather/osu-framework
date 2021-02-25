@@ -13,11 +13,6 @@ namespace osu.Framework.Localisation
         /// <summary>
         /// Sets the original, un-localised text.
         /// </summary>
-        LocalisedString Text { set; }
-
-        /// <summary>
-        /// 设置是否使用之前的unicode方案
-        /// </summary>
-        bool UseLegacyUnicode { get; set; }
+        LocalisableString Text { set; }
     }
 }
