@@ -56,9 +56,9 @@ namespace osu.Framework.Configuration
             new TrackedSetting<string>(FrameworkSetting.IgnoredInputHandlers, v =>
             {
                 bool raw = !v.Contains("Raw");
-                return new SettingDescription(raw, "Raw Input", raw ? "enabled" : "disabled", "Ctrl+Alt+R to reset");
+                return new SettingDescription(raw, "原始输入", raw ? "已启用" : "已禁用", "按Ctrl+Alt+R重置");
             }),
-            new TrackedSetting<WindowMode>(FrameworkSetting.WindowMode, v => new SettingDescription(v, "Screen Mode", v.ToString(), "Alt+Enter"))
+            new TrackedSetting<WindowMode>(FrameworkSetting.WindowMode, v => new SettingDescription(v, "屏幕模式", v.GetDescription() ?? v.ToString(), "Alt+Enter"))
         };
     }
 

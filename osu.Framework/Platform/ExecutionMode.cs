@@ -7,10 +7,10 @@ namespace osu.Framework.Platform
 {
     public enum ExecutionMode
     {
-        [Description("Single thread")]
+        [Description("单线程")]
         SingleThread,
 
-        [Description("Multithreaded")]
+        [Description("多线程")]
         MultiThreaded
     }
 }

@@ -7,18 +7,19 @@ namespace osu.Framework.Configuration
 {
     public enum FrameSync
     {
+        [Description("垂直同步")]
         VSync,
 
-        [Description("2x refresh rate")]
+        [Description("2倍刷新率")]
         Limit2x,
 
-        [Description("4x refresh rate")]
+        [Description("4倍刷新率")]
         Limit4x,
 
-        [Description("8x refresh rate")]
+        [Description("8倍刷新率")]
         Limit8x,
 
-        [Description("Unlimited")]
+        [Description("无限制")]
         Unlimited,
     }
 }
