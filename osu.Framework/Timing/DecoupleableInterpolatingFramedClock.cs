@@ -22,6 +22,8 @@ namespace osu.Framework.Timing
         /// </summary>
         public bool IsCoupled = true;
 
+        public bool DisableSourceAdjustment;
+
         /// <summary>
         /// In some cases we should always use the interpolated source.
         /// </summary>
@@ -116,7 +118,10 @@ namespace osu.Framework.Timing
             if (source == null) return;
 
             // transfer our value to the source clock.
-            (source as IAdjustableClock)?.Seek(CurrentTime);
+            if (DisableSourceAdjustment)
+                Seek(((IAdjustableClock)source).CurrentTime);
+            else
+                (source as IAdjustableClock)?.Seek(CurrentTime);
 
             base.ChangeSource(source);
         }
@@ -131,7 +136,7 @@ namespace osu.Framework.Timing
 
         public void Start()
         {
-            if (adjustableSource?.IsRunning == false)
+            if (adjustableSource?.IsRunning == false && !DisableSourceAdjustment)
             {
                 if (adjustableSource.Seek(ProposedCurrentTime))
                     //only start the source clock if our time values match.
@@ -145,21 +150,26 @@ namespace osu.Framework.Timing
         public void Stop()
         {
             decoupledStopwatch.Stop();
-            adjustableSource?.Stop();
+
+            if (!DisableSourceAdjustment)
+                adjustableSource?.Stop();
         }
 
         public bool Seek(double position)
         {
             try
             {
-                bool success = adjustableSource?.Seek(position) != false;
+                if (!DisableSourceAdjustment)
+                {
+                    bool success = adjustableSource?.Seek(position) != false;
 
-                if (IsCoupled)
-                    return success;
+                    if (IsCoupled)
+                        return success;
 
-                if (!success)
-                    //if we failed to seek then stop the source and use decoupled mode.
-                    adjustableSource?.Stop();
+                    if (!success)
+                        //if we failed to seek then stop the source and use decoupled mode.
+                        adjustableSource?.Stop();
+                }
 
                 return decoupledStopwatch.Seek(position);
             }
