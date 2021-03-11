@@ -1,0 +1,13 @@
+diff --git a/osu.Framework/Input/Handlers/Mouse/MouseHandler.cs b/osu.Framework/Input/Handlers/Mouse/MouseHandler.cs
+index 58c1baa66..fd36e94b5 100644
+--- a/osu.Framework/Input/Handlers/Mouse/MouseHandler.cs
++++ b/osu.Framework/Input/Handlers/Mouse/MouseHandler.cs
+@@ -23,7 +23,7 @@ public class MouseHandler : InputHandler, IHasCursorSensitivity, INeedsMousePosi
+ 
+         public override int Priority => 0;
+ 
+-        private bool useRelativeMode = true;
++        private bool useRelativeMode;
+ 
+         /// <summary>
+         /// Whether relative mode should be preferred when the window has focus and the cursor is contained.
