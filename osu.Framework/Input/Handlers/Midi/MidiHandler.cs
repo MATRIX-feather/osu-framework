@@ -15,8 +15,9 @@ using osu.Framework.Threading;
 
 namespace osu.Framework.Input.Handlers.Midi
 {
-    public class MidiInputHandler : InputHandler
+    public class MidiHandler : InputHandler
     {
+        public override string Description => "MIDI";
         public override bool IsActive => true;
         public override int Priority => 0;
 
@@ -32,6 +33,9 @@ namespace osu.Framework.Input.Handlers.Midi
 
         public override bool Initialize(GameHost host)
         {
+            if (!base.Initialize(host))
+                return false;
+
             Enabled.BindValueChanged(e =>
             {
                 if (e.NewValue)
