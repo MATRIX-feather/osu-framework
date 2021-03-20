@@ -100,8 +100,8 @@ namespace osu.Framework.Input.Handlers.Midi
             catch (Exception e)
             {
                 Logger.Error(e, RuntimeInfo.OS == RuntimeInfo.Platform.Linux
-                    ? "Couldn't list input devices. Is libasound2-dev installed?"
-                    : "Couldn't list input devices. There may be another application already using MIDI.");
+                    ? "无法列出输入设备. 是否 libasound2-dev 没有安装?"
+                    : "无法列出输入设备. 可能是因为另一个应用程序正在使用MIDI.");
 
                 Enabled.Value = false;
                 return false;

@@ -27,7 +27,7 @@ namespace osu.Framework.Input.Handlers.Mouse
 
         public BindableDouble Sensitivity { get; } = new BindableDouble(1) { MinValue = 0.1, MaxValue = 10 };
 
-        public override string Description => "Mouse";
+        public override string Description => "鼠标";
 
         public override bool IsActive => true;
 
