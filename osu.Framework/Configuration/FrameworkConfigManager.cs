@@ -52,17 +52,17 @@ namespace osu.Framework.Configuration
 
         public override TrackedSettings CreateTrackedSettings() => new TrackedSettings
         {
-            new TrackedSetting<FrameSync>(FrameworkSetting.FrameSync, v => new SettingDescription(v, "Frame Limiter", v.GetDescription(), "Ctrl+F7")),
-            new TrackedSetting<string>(FrameworkSetting.AudioDevice, v => new SettingDescription(v, "Audio Device", string.IsNullOrEmpty(v) ? "Default" : v, v)),
-            new TrackedSetting<bool>(FrameworkSetting.ShowLogOverlay, v => new SettingDescription(v, "Debug Logs", v ? "visible" : "hidden", "Ctrl+F10")),
-            new TrackedSetting<Size>(FrameworkSetting.WindowedSize, v => new SettingDescription(v, "Screen resolution", $"{v.Width}x{v.Height}")),
-            new TrackedSetting<WindowMode>(FrameworkSetting.WindowMode, v => new SettingDescription(v, "Screen Mode", v.ToString(), "Alt+Enter")),
+            new TrackedSetting<FrameSync>(FrameworkSetting.FrameSync, v => new SettingDescription(v, "帧数限制", v.GetDescription(), "Ctrl+F7")),
+            new TrackedSetting<string>(FrameworkSetting.AudioDevice, v => new SettingDescription(v, "音频设备", string.IsNullOrEmpty(v) ? "默认" : v, v)),
+            new TrackedSetting<bool>(FrameworkSetting.ShowLogOverlay, v => new SettingDescription(v, "调试日志", v ? "显示" : "隐藏", "Ctrl+F10")),
+            new TrackedSetting<Size>(FrameworkSetting.WindowedSize, v => new SettingDescription(v, "屏幕分辨率", $"{v.Width}x{v.Height}")),
+            new TrackedSetting<WindowMode>(FrameworkSetting.WindowMode, v => new SettingDescription(v, "窗口模式", v.GetDescription(), "Alt+Enter")),
 #pragma warning disable 618
-            new TrackedSetting<double>(FrameworkSetting.CursorSensitivity, v => new SettingDescription(v, "Cursor Sensitivity", v.ToString(@"0.##x"), "Ctrl+Alt+R to reset")),
+            new TrackedSetting<double>(FrameworkSetting.CursorSensitivity, v => new SettingDescription(v, "光标灵敏度", v.ToString(@"0.##x"), "使用Ctrl+Alt+R重置")),
             new TrackedSetting<string>(FrameworkSetting.IgnoredInputHandlers, v =>
             {
                 bool raw = !v.Contains("Raw");
-                return new SettingDescription(raw, "原始输入", raw ? "已启用" : "已禁用", "按Ctrl+Alt+R重置");
+                return new SettingDescription(raw, "原始输入", raw ? "已启用" : "已禁用", "使用Ctrl+Alt+R重置");
             }),
 #pragma warning restore 618
         };
