@@ -18,8 +18,10 @@ namespace osu.Framework.Input.Handlers.Midi
     public class MidiHandler : InputHandler
     {
         public override string Description => "MIDI";
-        public override bool IsActive => true;
+        public override bool IsActive => active;
         public override int Priority => 0;
+
+        private bool active = true;
 
         private ScheduledDelegate scheduledRefreshDevices;
 
@@ -103,7 +105,7 @@ namespace osu.Framework.Input.Handlers.Midi
                     ? "无法列出输入设备. 是否 libasound2-dev 没有安装?"
                     : "无法列出输入设备. 可能是因为另一个应用程序正在使用MIDI.");
 
-                Enabled.Value = false;
+                active = false;
                 return false;
             }
         }
