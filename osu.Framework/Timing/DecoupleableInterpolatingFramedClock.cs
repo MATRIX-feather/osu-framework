@@ -1,6 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+#nullable enable
+
 using System;
 
 namespace osu.Framework.Timing
@@ -35,7 +37,7 @@ namespace osu.Framework.Timing
         /// <summary>
         /// We need to be able to pass on adjustments to the source if it supports them.
         /// </summary>
-        private IAdjustableClock adjustableSource => Source as IAdjustableClock;
+        private IAdjustableClock? adjustableSource => Source as IAdjustableClock;
 
         public override double CurrentTime => currentTime;
 
@@ -54,7 +56,13 @@ namespace osu.Framework.Timing
         public override double Rate
         {
             get => Source?.Rate ?? 1;
-            set => adjustableSource.Rate = value;
+            set
+            {
+                if (adjustableSource == null)
+                    throw new NotSupportedException("Source is not adjustable.");
+
+                adjustableSource.Rate = value;
+            }
         }
 
         public void ResetSpeedAdjustments() => Rate = 1;
@@ -113,7 +121,7 @@ namespace osu.Framework.Timing
             currentTime = elapsedFrameTime < 0 ? Math.Min(currentTime, proposedTime) : Math.Max(currentTime, proposedTime);
         }
 
-        public override void ChangeSource(IClock source)
+        public override void ChangeSource(IClock? source)
         {
             if (source == null) return;
 
