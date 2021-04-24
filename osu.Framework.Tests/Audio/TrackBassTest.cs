@@ -384,6 +384,22 @@ namespace osu.Framework.Tests.Audio
             Assert.AreEqual(0, track.CurrentTime);
         }
 
+        [Test]
+        public void TestBitrate()
+        {
+            Assert.Greater(track.Bitrate, 0);
+        }
+
+        [Test]
+        public void TestCurrentTimeUpdatedAfterInlineSeek()
+        {
+            track.StartAsync();
+            updateTrack();
+
+            runOnAudioThread(() => track.Seek(20000));
+            Assert.That(track.CurrentTime, Is.EqualTo(20000).Within(100));
+        }
+
         private void takeEffectsAndUpdateAfter(int after)
         {
             updateTrack();
