@@ -2873,10 +2873,10 @@ namespace osu.Framework.Graphics
 
     public enum RotationDirection
     {
-        [Description("Clockwise")]
+        [Description("顺时针")]
         Clockwise,
 
-        [Description("Counterclockwise")]
+        [Description("逆时针")]
         Counterclockwise,
     }
 
