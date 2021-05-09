@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using osu.Framework.Platform.Linux.Native;
 using osu.Framework.Platform.Linux.SDL2;
 using osuTK;
 
@@ -40,5 +41,9 @@ namespace osu.Framework.Platform.Linux
         }
 
         public override Clipboard GetClipboard() => new SDL2Clipboard();
+
+        public void GamemodeStart() => GamemodeSupport.RequestStart();
+
+        public void GamemodeEnd() => GamemodeSupport.RequestEnd();
     }
 }
