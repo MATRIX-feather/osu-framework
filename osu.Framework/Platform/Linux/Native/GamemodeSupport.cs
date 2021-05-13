@@ -20,8 +20,13 @@ namespace osu.Framework.Platform.Linux.Native
             {
                 if (!gamemodeActivated)
                 {
-                    if (real_gamemode_request_start() != 0)
-                        Logger.Log("无法激活Gamemode。", LoggingTarget.Runtime, LogLevel.Important);
+                    int result = real_gamemode_request_start();
+
+                    if (result != 0)
+                    {
+                        Logger.Log($"无法激活Gamemode: {result}", LoggingTarget.Runtime, LogLevel.Important);
+                    }
+
                     gamemodeActivated = true;
                 }
             }
@@ -37,8 +42,9 @@ namespace osu.Framework.Platform.Linux.Native
             {
                 if (gamemodeActivated)
                 {
-                    if (real_gamemode_request_end() != 0)
-                        Logger.Log("无法结束Gamemode。", LoggingTarget.Runtime, LogLevel.Important);
+                    int result = real_gamemode_request_end();
+                    if (result != 0)
+                        Logger.Log($"无法结束Gamemode: {result}", LoggingTarget.Runtime, LogLevel.Important);
                     gamemodeActivated = false;
                 }
             }
