@@ -58,6 +58,17 @@ namespace osu.Framework.Graphics.Pooling
             LoadComponents(pool.ToArray());
         }
 
+        public void Clear()
+        {
+            foreach (var p in pool)
+                p.Dispose();
+
+            pool.Clear();
+            CountAvailable = 0;
+            CountInUse = 0;
+            CountConstructed = 0;
+        }
+
         /// <summary>
         /// Return a drawable after use.
         /// </summary>
